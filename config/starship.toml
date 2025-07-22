@@ -1,0 +1,46 @@
+format = """\
+$os$username\
+$all$character"""
+
+command_timeout = 5000
+add_newline = false
+
+[os]
+format = "[$symbol](bold red) "
+disabled = false
+
+[os.symbols]
+Windows = " "
+Arch = "󰣇 "
+Ubuntu = " "
+Macos = "󰀵 "
+
+[username]
+style_user = "purple bold"
+style_root = "black bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[hostname]
+ssh_only = false
+format = "on [$hostname](bold yellow) "
+disabled = false
+
+[directory]
+home_symbol = "󰋜 ~"
+read_only_style = "197"
+read_only = "  "
+format = "at [$path]($style)[$read_only]($read_only_style) "
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+[python]
+symbol = " "
+style = "bold yellow"
+
+[nodejs]
+symbol = " "
+style = "bold green"
