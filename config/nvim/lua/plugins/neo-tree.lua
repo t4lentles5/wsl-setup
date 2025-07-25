@@ -8,10 +8,11 @@ return {
   },
   config = function()
     require("neo-tree").setup({
-      sources = { "filesystem", "buffers", "git_status" },
+      sources = { "filesystem", "git_status" },
       window = {
         position = "left",
         width = 35,
+        show_header = false,
       },
       filesystem = {
         follow_current_file = { enabled = true },
