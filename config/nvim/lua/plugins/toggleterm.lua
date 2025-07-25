@@ -16,7 +16,7 @@ return {
       start_in_insert = true,
 
       on_open = function(term)
-        vim.api.nvim_win_set_option(term.window, "winhighlight", "Normal:Normal")
+--        vim.api.nvim_win_set_option(term.window, "winhighlight", "Normal:Normal")
         vim.api.nvim_buf_set_option(term.bufnr, "filetype", "toggleterm")
 
         vim.api.nvim_buf_set_option(term.bufnr, "modifiable", true)
