@@ -29,19 +29,19 @@ return {
 		},
 
 		dashboard = {
-			-- width = 65,
-			-- sections = {
-			-- { section = "header" },
-			-- { section = "keys", gap = 1, padding = 1 },
-			-- { section = "startup" },
-			-- {
-			-- section = "terminal",
-			-- cmd = "colorscript -e zfetch; sleep .1",
-			-- pane = 2,
-			-- indent = 2,
-			-- height = 20,
-			-- },
-			-- },
+			width = 50,
+			sections = {
+        { section = "header" },
+        { section = "keys", gap = 1, padding = 1 },
+        { section = "startup" },
+        {
+          section = "terminal",
+          cmd = "pokemon-colorscripts -n articuno --no-title; sleep .0",
+          pane = 2,
+          indent = 0,
+          height = 25,
+        },
+			},
 		},
 
 		picker = {
