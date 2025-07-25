@@ -129,4 +129,4 @@ alias cls='clear'
 eval "$(starship init zsh)"
 
 # pokemon-colorscripts -r --no-title
-pokemon-colorscripts -rn gengar,snorlax,charizard,sceptile,blastoise,wobbuffet,onix --no-title
+pokemon-colorscripts -rn gengar,snorlax,charizard,sceptile,blastoise,wobbuffet,onix,dragonite,lugia,articuno,zapdos,moltres,arcanine,venusaur --no-title
