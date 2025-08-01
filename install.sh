@@ -112,13 +112,13 @@ sleep 10
 
 [ ! -d "$backup_folder" ] && mkdir -p "$backup_folder"
 
-for folder in nvim ranger zsh; do
+for folder in ranger zsh; do
   if [ -d "$HOME/.config/$folder" ]; then
-    if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> RiceError.log; then
+    if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> WSLSetupError.log; then
       printf "%s%s%s folder backed up successfully at %s%s/%s_%s%s\n" "${BLD}" "${CGR}" "$folder" "${CBL}" "$backup_folder" "$folder" "$date" "${CNC}"
       sleep 1
     else
-      printf "%s%sFailed to backup %s folder. See %sRiceError.log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
+      printf "%s%sFailed to backup %s folder. See %sWSLSetupError.log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
       sleep 1
     fi
   else
@@ -175,8 +175,8 @@ for dirs in ~/wsl-setup/config/*; do
   fi
 done
 
-cp -f "$HOME"/dotfiles/config/starship.toml "$HOME"/.config
-cp -f "$HOME"/dotfiles/home/.zshrc "$HOME"
+cp -f "$HOME"/wsl-setup/config/starship.toml "$HOME"/.config
+cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 
 printf "\n\n%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 5
