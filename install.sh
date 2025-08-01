@@ -180,3 +180,60 @@ cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 
 printf "\n\n%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 5
+
+########## ---------- Cloning the zsh plugins! ---------- ##########
+
+logo "Download zsh plugins"
+
+plugins_dir="$HOME/.config/zsh/plugins/"
+
+mkdir -p "$plugins_dir"
+
+repo_url="https://github.com/zsh-users/zsh-autosuggestions"
+
+printf "Cloning plugin from %s\n" "$repo_url"
+git clone "$repo_url" "$plugins_dir/zsh-autosuggestions"
+sleep 2
+
+repo_url="https://github.com/zsh-users/zsh-syntax-highlighting"
+
+printf "Cloning plugin from %s\n" "$repo_url"
+git clone "$repo_url" "$plugins_dir/zsh-syntax-highlighting"
+sleep 2
+
+repo_url="https://github.com/zsh-users/zsh-history-substring-search"
+
+printf "Cloning plugin from %s\n" "$repo_url"
+git clone "$repo_url" "$plugins_dir/zsh-history-substring-search"
+sleep 2
+
+clear
+
+########## ---------- Download pokemon-colorscripts! ---------- ##########
+
+logo "Download pokemon-colorscripts"
+
+repo_url="https://gitlab.com/phoneybadger/pokemon-colorscripts.git"
+
+git clone "$repo_url"
+sleep 2
+
+cd pokemon-colorscripts
+sudo ./install.sh
+
+cd
+
+clear
+
+########## --------- Changing shell to zsh ---------- ##########
+
+logo "Changing default shell to zsh"
+
+if [[ $SHELL != "/usr/bin/zsh" ]]; then
+    printf "\n%s%sChanging your shell to zsh. Your root password is needed.%s\n\n" "${BLD}" "${CYE}" "${CNC}"
+    chsh -s /usr/bin/zsh
+    printf "%s%sShell changed to zsh. Please reboot.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+else
+    printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot%s\n" "${BLD}" "${CGR}" "${CNC}"
+fi
+zsh
