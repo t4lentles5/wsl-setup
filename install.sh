@@ -11,26 +11,8 @@ backup_folder=~/.WSLSetupBackup
 date=$(date +%Y%m%d-%H%M%S)
 
 logo() {
-
   local text="${1:?}"
-  echo -en "
-	               %%%
-	        %%%%%//%%%%%
-	      %%************%%%
-	  (%%//############*****%%
-	%%%%%**###&&&&&&&&&###**//
-	%%(**##&&&#########&&&##**
-	%%(**##*****#####*****##**%%%
-	%%(**##     *****     ##**
-	   //##   @@**   @@   ##//
-	     ##     **###     ##
-	     #######     #####//
-	       ###**&&&&&**###
-	       &&&         &&&
-	       &&&////   &&
-	          &&//@@@**
-	            ..***
-  WSL Setup\n\n"
+  
   printf ' %s [%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
 }
 
@@ -215,10 +197,10 @@ logo "Download pokemon-colorscripts"
 
 repo_url="https://gitlab.com/phoneybadger/pokemon-colorscripts.git"
 
-git clone "$repo_url"
+git clone "$repo_url" "$HOME/.config/pokemon-colorscripts"
 sleep 2
 
-cd pokemon-colorscripts
+cd "$HOME/.config/pokemon-colorscripts"
 sudo ./install.sh
 
 cd
