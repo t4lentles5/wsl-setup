@@ -12,8 +12,8 @@ date=$(date +%Y%m%d-%H%M%S)
 
 logo() {
   local text="${1:?}"
-  
-  printf ' %s [%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
+
+  printf '%s[%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
 }
 
 ########## ---------- You must not run this as root ---------- ##########
@@ -50,14 +50,14 @@ clear
 
 logo "Installing needed packages.."
 
-dependences=(bat eza neovim ranger zsh)
+dependencies=(bat eza neovim ranger zsh highlight python3-pygments w3m w3m-img atool unrar p7zip-full ffmpegthumbnailer libimage-exiftool-perl mediainfo poppler-utils imagemagick odt2txt libarchive-tools transmission-cli lynx elinks)
 
 is_installed() {
   apt list --installed 2>/dev/null | grep "^$1$" >/dev/null
 }
 
 printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
-for package in "${dependences[@]}"; do
+for package in "${dependencies[@]}"; do
   if ! is_installed "$package"; then
     if sudo apt install "$package" -y >/dev/null 2>> WSLSetupError.log; then
       printf "%s%s%s %shas been installed succesfully.%s\n" "${BLD}" "${CYE}" "$package" "${CBL}" "${CNC}"
@@ -160,7 +160,21 @@ done
 cp -f "$HOME"/wsl-setup/config/starship.toml "$HOME"/.config
 cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 
-printf "\n\n%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
+printf "
+%s%sAdding execution permissions to scope.sh...%s
+" "${BLD}" "${CBL}" "${CNC}"
+if chmod +x "$HOME"/.config/ranger/scope.sh 2>> WSLSetupError.log; then
+  printf "%s%sPermissions added succesfully!%s
+" "${BLD}" "${CGR}" "${CNC}"
+else
+  printf "%s%sFailed to add permissions. See %sWSLSetupError.log%s
+" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+fi
+
+printf "
+
+%s%sFiles copied succesfully!!%s
+" "${BLD}" "${CGR}" "${CNC}"
 sleep 5
 
 ########## ---------- Cloning the zsh plugins! ---------- ##########
@@ -212,10 +226,10 @@ clear
 logo "Changing default shell to zsh"
 
 if [[ $SHELL != "/usr/bin/zsh" ]]; then
-    printf "\n%s%sChanging your shell to zsh. Your root password is needed.%s\n\n" "${BLD}" "${CYE}" "${CNC}"
-    chsh -s /usr/bin/zsh
-    printf "%s%sShell changed to zsh. Please reboot.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+  printf "\n%s%sChanging your shell to zsh. Your root password is needed.%s\n\n" "${BLD}" "${CYE}" "${CNC}"
+  chsh -s /usr/bin/zsh
+  printf "%s%sShell changed to zsh. Please reboot.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
 else
-    printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot%s\n" "${BLD}" "${CGR}" "${CNC}"
+  printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot%s\n" "${BLD}" "${CGR}" "${CNC}"
 fi
 zsh
