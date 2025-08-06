@@ -36,7 +36,7 @@ To ensure all features and visual elements of this setup work correctly, especia
 >
 > **Recommendation:** **JetBrains Mono Nerd Font** is an excellent choice for its readability and comprehensive glyph support. You can download it from [Nerd Fonts](https://www.nerdfonts.com/font-downloads), install it on your Windows system, and then configure your terminal emulator (e.g., Windows Terminal) to use it.
 
-- **Starship (optional, but recommended):** While the setup helps configure Starship, you'll benefit most if you've already had it installed on your system, as it's the core component for your shell prompt.
+- **Starship:** This is a minimal, blazing-fast, and extremely customizable prompt for any shell.
 
 ---
 
