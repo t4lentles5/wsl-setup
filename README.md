@@ -20,15 +20,15 @@ To ensure all features and visual elements of this setup work correctly, especia
 - `git` installed to clone the repository.
 - **Neovim v0.10.0 or newer:** Many of the Neovim plugins used in this configuration, like `blink.cmp` and `Noice.nvim`, rely on features available only in Neovim version 0.10.0 or later.
 
-  > [!TIP]
-  > If your distribution's package manager provides an older version, consider installing Neovim via its official [AppImage](https://github.com/neovim/neovim/releases) or a specific PPA for newer versions. On WSL, you might also need to install `libfuse2` (`sudo apt install libfuse2` or `libfuse2t64` for newer distributions) to run AppImages.
+> [!TIP]
+> If your distribution's package manager provides an older version, consider installing Neovim via its official [AppImage](https://github.com/neovim/neovim/releases) or a specific PPA for newer versions. On WSL, you might also need to install `libfuse2` (`sudo apt install libfuse2` or `libfuse2t64` for newer distributions) to run AppImages.
 
 - **A Nerd Font installed on your system:**
 
-  > [!NOTE]
-  > This is crucial for displaying the various icons used by `Neo-tree`, `nvim-web-devicons`, and your shell prompt (Starship). Without it, you'll see corrupted characters instead of icons.
-  >
-  > **Recommendation:** **JetBrains Mono Nerd Font** is an excellent choice for its readability and comprehensive glyph support. You can download it from [Nerd Fonts](https://www.nerdfonts.com/font-downloads), install it on your Windows system, and then configure your terminal emulator (e.g., Windows Terminal) to use it.
+> [!NOTE]
+> This is crucial for displaying the various icons used by `Neo-tree`, `nvim-web-devicons`, and your shell prompt (Starship). Without it, you'll see corrupted characters instead of icons.
+>
+> **Recommendation:** **JetBrains Mono Nerd Font** is an excellent choice for its readability and comprehensive glyph support. You can download it from [Nerd Fonts](https://www.nerdfonts.com/font-downloads), install it on your Windows system, and then configure your terminal emulator (e.g., Windows Terminal) to use it.
 
 - **Starship (optional, but recommended):** While the setup helps configure Starship, you'll benefit most if you've already had it installed on your system, as it's the core component for your shell prompt.
 
