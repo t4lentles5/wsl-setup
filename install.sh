@@ -50,7 +50,7 @@ clear
 
 logo "Installing needed packages.."
 
-dependencies=(bat eza neovim ranger zsh highlight python3-pygments w3m w3m-img atool unrar p7zip-full ffmpegthumbnailer libimage-exiftool-perl mediainfo poppler-utils imagemagick odt2txt libarchive-tools transmission-cli lynx elinks)
+dependencies=(bat eza ranger zsh highlight python3-pygments w3m w3m-img atool unrar p7zip-full ffmpegthumbnailer libimage-exiftool-perl mediainfo poppler-utils imagemagick odt2txt libarchive-tools transmission-cli lynx elinks)
 
 is_installed() {
   apt list --installed 2>/dev/null | grep "^$1$" >/dev/null
