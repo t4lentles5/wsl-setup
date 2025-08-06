@@ -4,11 +4,17 @@ This repository provides a set of configuration files and an installation script
 
 The setup includes configurations for:
 
-- **Zsh** as the default shell, with plugins for a better experience.
-- **Neovim** as a powerful and customized text editor.
-- **Ranger** as a terminal file manager with icons.
-- **Starship** for a minimal and informative shell prompt.
-- Other useful tools like `eza` (a modern `ls` replacement) and `bat` (a `cat` clone with syntax highlighting).
+|                                                                         Ranger                                                                         |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img src="https://res.cloudinary.com/diu2godjy/image/upload/v1754523320/Captura_de_pantalla_2025-08-06_183512_agudwp.png" alt="Ranger" align="center"> |
+
+|                                                                         Neovim                                                                         |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img src="https://res.cloudinary.com/diu2godjy/image/upload/v1754522954/Captura_de_pantalla_2025-08-06_182857_fd2jmr.png" alt="Neovim" align="center"> |
+
+|                                                                         ZSH + Starship                                                                         |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img src="https://res.cloudinary.com/diu2godjy/image/upload/v1754523205/Captura_de_pantalla_2025-08-06_183314_b6mqlv.png" alt="ZSH + Starship" align="center"> |
 
 ---
 
