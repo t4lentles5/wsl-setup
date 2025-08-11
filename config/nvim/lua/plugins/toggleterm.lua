@@ -3,25 +3,24 @@ return {
   version = "*",
   config = function()
     require("toggleterm").setup({
-      open_mapping = [[<c-\>]],
+      open_mapping = [[<C-\>]],
       direction = "float",
       size = 20,
-      float_opts = {
-        border = "curved",
-        width = 100,
-        height = 25,
-        winblend = 0,
-      },
+      persist_size = true,
+      close_on_exit = true,
       shade_terminals = true,
       start_in_insert = true,
 
+      float_opts = {
+        border = "curved",
+        width = math.floor(vim.o.columns * 0.8),
+        height = math.floor(vim.o.lines * 0.8),
+        winblend = 0,
+      },
+
       on_open = function(term)
---        vim.api.nvim_win_set_option(term.window, "winhighlight", "Normal:Normal")
+        vim.api.nvim_win_set_option(term.window, "winhighlight", "Normal:Normal,FloatBorder:FloatBorder")
         vim.api.nvim_buf_set_option(term.bufnr, "filetype", "toggleterm")
-
-        vim.api.nvim_buf_set_option(term.bufnr, "modifiable", true)
-
-        vim.api.nvim_buf_set_option(term.bufnr, "modifiable", false)
       end,
     })
   end,

@@ -1,4 +1,6 @@
 local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -40,3 +42,59 @@ map("n", "<C-Up>", ":resize -3<CR>")
 map("n", "<C-Down>", ":resize +3<CR>")
 map("n", "<C-Left>", ":vertical resize -3<CR>")
 map("n", "<C-Right>", ":vertical resize +3<CR>")
+
+-- Bufferline
+map("n", "<Tab>", ":BufferLineCycleNext<CR>")
+map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>")
+
+-- Close buffer
+map("n", "<leader>c", function()
+  require("mini.bufremove").delete(0, false)
+end, { desc = "Close Buffer (safe)" })
+
+-- Explorer
+map("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Explorer" })
+
+-- Snacks keymaps
+-- Top Pickers & Explorer
+map("n", "<leader><space>", function() Snacks.picker.smart() end, { desc = "Smart Find Files" })
+map("n", "<leader>,", function() Snacks.picker.buffers() end, { desc = "Buffers" })
+map("n", "<leader>/", function() Snacks.picker.grep() end, { desc = "Grep" })
+map("n", "<leader>:", function() Snacks.picker.command_history() end, { desc = "Command History" })
+-- map("n", "<leader>e", function() Snacks.explorer() end, { desc = "File Explorer" })
+
+-- Find
+map("n", "<leader>fb", function() Snacks.picker.buffers() end, { desc = "Buffers" })
+map("n", "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end,
+  { desc = "Find Config File" })
+map("n", "<leader>ff", function() Snacks.picker.files() end, { desc = "Find Files" })
+map("n", "<leader>fg", function() Snacks.picker.git_files() end, { desc = "Find Git Files" })
+map("n", "<leader>fp", function() Snacks.picker.projects() end, { desc = "Projects" })
+map("n", "<leader>fr", function() Snacks.picker.recent() end, { desc = "Recent" })
+
+-- Git
+map("n", "<leader>gb", function() Snacks.picker.git_branches() end, { desc = "Git Branches" })
+map("n", "<leader>gl", function() Snacks.picker.git_log() end, { desc = "Git Log" })
+map("n", "<leader>gL", function() Snacks.picker.git_log_line() end, { desc = "Git Log Line" })
+map("n", "<leader>gs", function() Snacks.picker.git_status() end, { desc = "Git Status" })
+map("n", "<leader>gS", function() Snacks.picker.git_stash() end, { desc = "Git Stash" })
+map("n", "<leader>gd", function() Snacks.picker.git_diff() end, { desc = "Git Diff (Hunks)" })
+
+-- LSP
+map("n", "gd", function() Snacks.picker.lsp_definitions() end, { desc = "Goto Definition" })
+map("n", "gD", function() Snacks.picker.lsp_declarations() end, { desc = "Goto Declaration" })
+map("n", "gr", function() Snacks.picker.lsp_references() end, { nowait = true, desc = "References" })
+map("n", "gI", function() Snacks.picker.lsp_implementations() end, { desc = "Goto Implementation" })
+map("n", "gy", function() Snacks.picker.lsp_type_definitions() end, { desc = "Goto Type Definition" })
+map("n", "<leader>ss", function() Snacks.picker.lsp_symbols() end, { desc = "LSP Symbols" })
+map("n", "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, { desc = "LSP Workspace Symbols" })
+
+-- Diagnostics
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",
+  vim.tbl_extend("force", opts, { desc = "Diagnostics (Trouble)" }))
+map("n", "<leader>xw", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+  vim.tbl_extend("force", opts, { desc = "Buffer Diagnostics (Trouble)" }))
+map("n", "<leader>xl", "<cmd>Trouble loclist toggle<cr>",
+  vim.tbl_extend("force", opts, { desc = "Location List (Trouble)" }))
+map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>",
+  vim.tbl_extend("force", opts, { desc = "Quickfix List (Trouble)" }))
