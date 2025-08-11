@@ -45,7 +45,7 @@ To ensure all features and visual elements of this setup work correctly, especia
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/Obrn544/wsl-setup.git](https://github.com/Obrn544/wsl-setup.git)
+    git clone https://github.com/t4lentles5/wsl-setup.git
     ```
 
 2.  **Navigate to the repository directory:**
