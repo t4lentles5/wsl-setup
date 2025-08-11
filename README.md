@@ -72,3 +72,79 @@ To ensure all features and visual elements of this setup work correctly, especia
 ## Uninstallation / Reverting
 
 The script creates a timestamped backup of your original configuration files in the `~/.WSLSetupBackup` directory. To revert the changes, you can manually restore your files from that directory.
+
+---
+
+## Keyboard Shortcuts
+
+This section provides a summary of the keybindings configured for Neovim in this setup. The `<leader>` key is set to `Space`.
+
+### General
+
+| Keybinding        | Description                     |
+| :---------------- | :------------------------------ |
+| `<leader>w`       | Save current file               |
+| `jk`              | Exit insert mode                |
+| `<leader>q`       | Quit Neovim                     |
+| `+` / `-`         | Increment/decrement numbers     |
+| `<C-a>`           | Select all text in the file     |
+| `>` / `<`         | Indent selected lines           |
+| `te`              | Open a new tab                  |
+| `<C-b>` / `<C-f>` | Scroll up/down in documentation |
+| `<C-Space>`       | Trigger code completion         |
+| `<C-e>`           | Abort completion                |
+| `<CR>`            | Confirm completion              |
+
+### Window and Buffer Management
+
+| Keybinding       | Description                    |
+| :--------------- | :----------------------------- |
+| `<leader>sh`     | Split window horizontally      |
+| `<leader>sv`     | Split window vertically        |
+| `<C-h/j/k/l>`    | Navigate between window splits |
+| `<C-Up/Down>`    | Resize split horizontally      |
+| `<C-Left/Right>` | Resize split vertically        |
+| `<Tab>`          | Go to the next buffer          |
+| `<S-Tab>`        | Go to the previous buffer      |
+| `<leader>c`      | Close the current buffer       |
+| `<c-\>`          | Toggle floating terminal       |
+
+### File Explorer and Navigation
+
+| Keybinding        | Description                       |
+| :---------------- | :-------------------------------- |
+| `<leader>e`       | Toggle file explorer (`neo-tree`) |
+| `<leader><space>` | Smart find files                  |
+| `<leader>,`       | List open buffers                 |
+| `<leader>/`       | Search for text in files (Grep)   |
+| `<leader>:`       | Show command history              |
+| `<leader>ff`      | Find files within the project     |
+| `<leader>fr`      | List recent files                 |
+| `<leader>fc`      | Find configuration files          |
+
+### Git Integration
+
+| Keybinding   | Description                   |
+| :----------- | :---------------------------- |
+| `<leader>gs` | View Git status               |
+| `<leader>gl` | View Git log                  |
+| `<leader>gL` | View Git log for current line |
+| `<leader>gb` | List Git branches             |
+| `<leader>gS` | List Git stash                |
+| `<leader>gd` | View Git diff (hunks)         |
+
+### LSP and Diagnostics
+
+| Keybinding   | Description                         |
+| :----------- | :---------------------------------- |
+| `gd`         | Go to definition                    |
+| `gD`         | Go to declaration                   |
+| `gr`         | Find references                     |
+| `gI`         | Go to implementation                |
+| `gy`         | Go to type definition               |
+| `<leader>ss` | List LSP symbols in document        |
+| `<leader>sS` | List LSP symbols in workspace       |
+| `<leader>xx` | Toggle diagnostics list (Trouble)   |
+| `<leader>xw` | Toggle diagnostics for current file |
+| `<leader>xl` | Toggle location list (Trouble)      |
+| `<leader>xq` | Toggle quickfix list (Trouble)      |
