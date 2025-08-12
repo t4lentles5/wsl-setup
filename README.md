@@ -24,11 +24,8 @@ To ensure all features and visual elements of this setup work correctly, especia
 
 - A Debian-based Linux distribution running on WSL (e.g., Ubuntu).
 - **Neovim v0.10.0 or newer:** Many of the Neovim plugins used in this configuration, like `blink.cmp` and `Noice.nvim`, rely on features available only in Neovim version 0.10.0 or later.
-
-> [!TIP]
-> If your distribution's package manager provides an older version, consider installing Neovim via its official [AppImage](https://github.com/neovim/neovim/releases) or a specific PPA for newer versions. On WSL, you might also need to install `libfuse2` (`sudo apt install libfuse2` or `libfuse2t64` for newer distributions) to run AppImages.
-
     ```bash
+    sudo apt install libfuse2t64
     curl -LO https://github.com/neovim/neovim/releases/download/v0.10.2/nvim.appimage
     chmod u+x nvim.appimage
     ./nvim.appimage
