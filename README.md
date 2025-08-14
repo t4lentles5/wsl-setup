@@ -23,15 +23,23 @@ The setup includes configurations for:
 To ensure all features and visual elements of this setup work correctly, especially with Neovim and the custom shell prompt, you'll need the following:
 
 - A Debian-based Linux distribution running on WSL (e.g., Ubuntu).
+
+- **System fully updated:** Before installing anything, make sure your system packages are up to date.
+
+  ```bash
+  sudo apt update && sudo apt upgrade -y
+  ```
+
 - **Neovim v0.10.0 or newer:** Many of the Neovim plugins used in this configuration, like `blink.cmp` and `Noice.nvim`, rely on features available only in Neovim version 0.10.0 or later.
-    ```bash
-    sudo apt install libfuse2t64
-    curl -LO https://github.com/neovim/neovim/releases/download/v0.10.2/nvim.appimage
-    chmod u+x nvim.appimage
-    ./nvim.appimage
-    sudo mv nvim.appimage /usr/local/bin/nvim
-    ```
-    
+
+  ```bash
+  sudo apt install libfuse2t64
+  curl -LO https://github.com/neovim/neovim/releases/download/v0.10.2/nvim.appimage
+  chmod u+x nvim.appimage
+  ./nvim.appimage
+  sudo mv nvim.appimage /usr/local/bin/nvim
+  ```
+
 - **A Nerd Font installed on your system:**
 
 > [!NOTE]
@@ -40,9 +48,9 @@ To ensure all features and visual elements of this setup work correctly, especia
 > **Recommendation:** **JetBrains Mono Nerd Font** is an excellent choice for its readability and comprehensive glyph support. You can download it from [Nerd Fonts](https://www.nerdfonts.com/font-downloads), install it on your Windows system, and then configure your terminal emulator (e.g., Windows Terminal) to use it.
 
 - **Starship:** This is a minimal, blazing-fast, and extremely customizable prompt for any shell.
-    ```bash
-    curl -sS https://starship.rs/install.sh | sh
-    ```
+  ```bash
+  curl -sS https://starship.rs/install.sh | sh
+  ```
 
 ---
 
