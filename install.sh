@@ -8,6 +8,7 @@ BLD=$(tput bold)
 CNC=$(tput sgr0)
 
 backup_folder=~/.WSLSetupBackup
+error_log=WSLSetupError.log
 date=$(date +%Y%m%d-%H%M%S)
 
 logo() {
@@ -59,11 +60,11 @@ is_installed() {
 printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
 for package in "${dependencies[@]}"; do
   if ! is_installed "$package"; then
-    if sudo apt install "$package" -y >/dev/null 2>> WSLSetupError.log; then
+    if sudo apt install "$package" -y >/dev/null 2>> "$error_log"; then
       printf "%s%s%s %shas been installed succesfully.%s\n" "${BLD}" "${CYE}" "$package" "${CBL}" "${CNC}"
       sleep 1
     else
-      printf "%s%s%s %shas not been installed correctly. See %sWSLSetupError.log %sfor more details.%s\n" "${BLD}" "${CYE}" "$package" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
+      printf "%s%s%s %shas not been installed correctly. See %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "$package" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
       sleep 1
     fi
   else
@@ -78,29 +79,18 @@ clear
 
 logo "Backup files"
 
-printf "If you already have a powerful and super Pro NEOVIM configuration, write 'n' in the next question. If you answer 'y' your neovim configuration will be moved to the backup directory.\n\n"
-
-while true; do
-  read -rp "Do you want to try my nvim config? (y/n): " try_nvim
-  if [[ "$try_nvim" == "y" || "$try_nvim" == "n" ]]; then
-    break
-  else
-    echo "Invalid input. Please enter 'y' or 'n'."
-  fi
-done
-
 printf "\nBackup files will be stored in %s%s%s/.WSLSetupBackup%s \n\n" "${BLD}" "${CRE}" "$HOME" "${CNC}"
 sleep 10
 
 [ ! -d "$backup_folder" ] && mkdir -p "$backup_folder"
 
-for folder in ranger zsh; do
+for folder in nvim ranger zsh; do
   if [ -d "$HOME/.config/$folder" ]; then
-    if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> WSLSetupError.log; then
+    if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> "$error_log"; then
       printf "%s%s%s folder backed up successfully at %s%s/%s_%s%s\n" "${BLD}" "${CGR}" "$folder" "${CBL}" "$backup_folder" "$folder" "$date" "${CNC}"
       sleep 1
     else
-      printf "%s%sFailed to backup %s folder. See %sWSLSetupError.log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
+      printf "%s%sFailed to backup %s folder. See %s$error_log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
       sleep 1
     fi
   else
@@ -109,27 +99,21 @@ for folder in ranger zsh; do
   fi
 done
 
-if [[ $try_nvim == "y" ]]; then
-  # Backup nvim
-  if [ -d "$HOME/.config/nvim" ]; then
-    if mv "$HOME/.config/nvim" "$backup_folder/nvim_$date" 2>> WSLSetupError.log; then
-      printf "%s%snvim folder backed up successfully at %s%s/nvim_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "$date" "${CNC}"
-      sleep 1
-    else
-      printf "%s%sFailed to backup nvim folder. See %sWSLSetupError.log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
-      sleep 1
-    fi
+if [ -f ~/.config/starship.toml ]; then
+  if mv ~/.config/starship.toml "$backup_folder"/.starship.toml_"$date" 2>> "$error_log"; then
+    printf "%s%sstarship.toml file backed up successfully at %s%s/.starship.toml_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}"
   else
-    printf "%s%snvim folder does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
-    sleep 1
+    printf "%s%sFailed to backup starship.toml file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
   fi
+else
+  printf "%s%sThe file starship.toml does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
 fi
 
 if [ -f ~/.zshrc ]; then
-  if mv ~/.zshrc "$backup_folder"/.zshrc_"$date" 2>> WSLSetupError.log; then
+  if mv ~/.zshrc "$backup_folder"/.zshrc_"$date" 2>> "$error_log"; then
     printf "%s%s.zshrc file backed up successfully at %s%s/.zshrc_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}"
   else
-    printf "%s%sFailed to backup .zshrc file. See %sWSLSetupError.log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+    printf "%s%sFailed to backup .zshrc file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
   fi
 else
   printf "%s%sThe file .zshrc does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
@@ -143,16 +127,12 @@ printf "Copying files to respective directories..\n"
 [ ! -d ~/.config ] && mkdir -p ~/.config
 
 for dirs in ~/wsl-setup/config/*; do
-  dir_name=$(basename "$dirs")
-# If the directory is nvim and the user doesn't want to try it, skip this loop
-  if [[ $dir_name == "nvim" && $try_nvim != "y" ]]; then
-    continue
-  fi
-  if cp -R "${dirs}" ~/.config/ 2>> WSLSetupError.log; then
+  dir_name=$(basename "$dirs")  
+  if cp -R "${dirs}" ~/.config/ 2>> "$error_log"; then
     printf "%s%s%s %sconfiguration installed succesfully%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CGR}" "${CNC}"
     sleep 1
   else
-    printf "%s%s%s %sconfiguration failed to been installed, see %sWSLSetupError.log %sfor more details.%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
+    printf "%s%s%s %sconfiguration failed to been installed, see %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
     sleep 1
   fi
 done
@@ -163,11 +143,11 @@ cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 printf "
 %s%sAdding execution permissions to scope.sh...%s
 " "${BLD}" "${CBL}" "${CNC}"
-if chmod +x "$HOME"/.config/ranger/scope.sh 2>> WSLSetupError.log; then
+if chmod +x "$HOME"/.config/ranger/scope.sh 2>> "$error_log"; then
   printf "%s%sPermissions added succesfully!%s
 " "${BLD}" "${CGR}" "${CNC}"
 else
-  printf "%s%sFailed to add permissions. See %sWSLSetupError.log%s
+  printf "%s%sFailed to add permissions. See %s$error_log%s
 " "${BLD}" "${CRE}" "${CBL}" "${CNC}"
 fi
 
@@ -228,8 +208,8 @@ logo "Changing default shell to zsh"
 if [[ $SHELL != "/usr/bin/zsh" ]]; then
   printf "\n%s%sChanging your shell to zsh. Your root password is needed.%s\n\n" "${BLD}" "${CYE}" "${CNC}"
   chsh -s /usr/bin/zsh
-  printf "%s%sShell changed to zsh. Please reboot.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+  printf "%s%sShell changed to zsh. Please reboot WSL.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
 else
-  printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot%s\n" "${BLD}" "${CGR}" "${CNC}"
+  printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot WSL%s\n" "${BLD}" "${CGR}" "${CNC}"
 fi
 zsh
