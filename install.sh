@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-CRE=$(tput setaf 1)
-CYE=$(tput setaf 3)
-CGR=$(tput setaf 2)
-CBL=$(tput setaf 4)
+CRE=$(tput setaf 1)   
+CYE=$(tput setaf 3)   
+CGR=$(tput setaf 2)   
+CBL=$(tput setaf 4)   
 BLD=$(tput bold)
 CNC=$(tput sgr0)
 
@@ -13,9 +13,14 @@ date=$(date +%Y%m%d-%H%M%S)
 
 logo() {
   local text="${1:?}"
+  local len=${#text}
+  local border=$(printf '═%.0s' $(seq 1 $((len+4))))
 
-  printf '%s[%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
+  printf "\n${CRE}╔${border}╗${CNC}\n"
+  printf "${CRE}║${CNC}  ${CYE}${text}${CNC}  ${CRE}║${CNC}\n"
+  printf "${CRE}╚${border}╝${CNC}\n\n"
 }
+
 
 ########## ---------- You must not run this as root ---------- ##########
 
@@ -35,7 +40,7 @@ fi
 ########## ---------- Welcome ---------- ##########
 
 logo "Welcome!"
-printf '%s%sThis script will check if you have the necessary dependencies, and if not, it will install them\n. After that, it will create a backup of your files, and then copy the new files to your computer.\n\nYou will be prompted for your root password to install missing dependencies and/or to switch to zsh shell if its not your default.\n\nThis script doesnt have the potential power to break your system, it only copies files from my repository to your HOME directory.%s\n\n' "${BLD}" "${CRE}" "${CNC}"
+printf '%s%sThis script will check if you have the necessary dependencies, and if not, it will install them.\nAfter that, it will create a backup of your files, and then copy the new files to your computer.\n\nYou will be prompted for your root password to install missing dependencies and/or to switch to zsh shell if it is not your default.\n\nThis script only copies files from my repository to your HOME directory.%s\n\n' "${BLD}" "${CRE}" "${CNC}"
 
 while true; do
   read -rp " Do you wish to continue? [y/N]: " yn
@@ -47,6 +52,11 @@ while true; do
 done
 clear
 
+########## ---------- Update system ---------- ##########
+
+logo "Updating system..."
+sudo apt update && sudo apt upgrade -y
+
 ########## ---------- Install packages ---------- ##########
 
 logo "Installing needed packages.."
@@ -54,25 +64,22 @@ logo "Installing needed packages.."
 dependencies=(bat eza highlight python3-pygments ranger xclip zsh)
 
 is_installed() {
-  apt list --installed 2>/dev/null | grep "^$1$" >/dev/null
+  dpkg -s "$1" &>/dev/null
 }
 
 printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
 for package in "${dependencies[@]}"; do
   if ! is_installed "$package"; then
-    if sudo apt install "$package" -y >/dev/null 2>> "$error_log"; then
-      printf "%s%s%s %shas been installed succesfully.%s\n" "${BLD}" "${CYE}" "$package" "${CBL}" "${CNC}"
-      sleep 1
+    if sudo apt install "$package" -y >/dev/null 2>>"$error_log"; then
+      printf "%s%s%s %shas been installed successfully.%s\n" "${BLD}" "${CYE}" "$package" "${CGR}" "${CNC}"
     else
       printf "%s%s%s %shas not been installed correctly. See %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "$package" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
-      sleep 1
     fi
   else
     printf '%s%s%s %sis already installed on your system!%s\n' "${BLD}" "${CYE}" "$package" "${CGR}" "${CNC}"
-    sleep 1
   fi
 done
-sleep 5
+sleep 3
 clear
 
 ########## ---------- Backup files ---------- ##########
@@ -80,44 +87,35 @@ clear
 logo "Backup files"
 
 printf "\nBackup files will be stored in %s%s%s/.WSLSetupBackup%s \n\n" "${BLD}" "${CRE}" "$HOME" "${CNC}"
-sleep 10
+sleep 5
 
 [ ! -d "$backup_folder" ] && mkdir -p "$backup_folder"
 
 for folder in nvim ranger zsh; do
   if [ -d "$HOME/.config/$folder" ]; then
-    if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> "$error_log"; then
-      printf "%s%s%s folder backed up successfully at %s%s/%s_%s%s\n" "${BLD}" "${CGR}" "$folder" "${CBL}" "$backup_folder" "$folder" "$date" "${CNC}"
-      sleep 1
-    else
-      printf "%s%sFailed to backup %s folder. See %s$error_log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
-      sleep 1
-    fi
+    mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>>"$error_log" \
+      && printf "%s%s%s folder backed up successfully at %s%s/%s_%s%s\n" "${BLD}" "${CGR}" "$folder" "${CBL}" "$backup_folder" "$folder" "$date" "${CNC}" \
+      || printf "%s%sFailed to backup %s folder. See %s$error_log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
   else
     printf "%s%s%s folder does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "$folder" "${CYE}" "${CNC}"
-    sleep 1
   fi
 done
 
-if [ -f ~/.config/starship.toml ]; then
-  if mv ~/.config/starship.toml "$backup_folder"/.starship.toml_"$date" 2>> "$error_log"; then
-    printf "%s%sstarship.toml file backed up successfully at %s%s/.starship.toml_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}"
-  else
-    printf "%s%sFailed to backup starship.toml file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
-  fi
-else
-  printf "%s%sThe file starship.toml does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
-fi
+for file in starship.toml .zshrc; do
+  if [ -f "$HOME/.config/$file" ]; then
+    mv "$HOME/.config/$file" "$backup_folder/${file}_$date" 2>>"$error_log" \
+      && printf "%s%s$file file backed up successfully at %s%s/$file_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}" \
+      || printf "%s%sFailed to backup $file file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
 
-if [ -f ~/.zshrc ]; then
-  if mv ~/.zshrc "$backup_folder"/.zshrc_"$date" 2>> "$error_log"; then
-    printf "%s%s.zshrc file backed up successfully at %s%s/.zshrc_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}"
+  elif [ -f "$HOME/$file" ]; then
+    mv "$HOME/$file" "$backup_folder/${file}_$date" 2>>"$error_log" \
+      && printf "%s%s$file file backed up successfully at %s%s/$file_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}" \
+      || printf "%s%sFailed to backup $file file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+
   else
-    printf "%s%sFailed to backup .zshrc file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+    printf "%s%sThe file $file does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
   fi
-else
-  printf "%s%sThe file .zshrc does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
-fi
+done
 
 ########## ---------- Copy folders ---------- ##########
 
@@ -127,89 +125,68 @@ printf "Copying files to respective directories..\n"
 [ ! -d ~/.config ] && mkdir -p ~/.config
 
 for dirs in ~/wsl-setup/config/*; do
-  dir_name=$(basename "$dirs")  
-  if cp -R "${dirs}" ~/.config/ 2>> "$error_log"; then
-    printf "%s%s%s %sconfiguration installed succesfully%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CGR}" "${CNC}"
-    sleep 1
-  else
-    printf "%s%s%s %sconfiguration failed to been installed, see %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
-    sleep 1
-  fi
+  dir_name=$(basename "$dirs")
+  cp -R "${dirs}" ~/.config/ 2>>"$error_log" \
+    && printf "%s%s%s %sconfiguration installed successfully%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CGR}" "${CNC}" \
+    || printf "%s%s%s %sconfiguration failed, see %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
 done
 
 cp -f "$HOME"/wsl-setup/config/starship.toml "$HOME"/.config
 cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 
-printf "
-%s%sAdding execution permissions to scope.sh...%s
-" "${BLD}" "${CBL}" "${CNC}"
-if chmod +x "$HOME"/.config/ranger/scope.sh 2>> "$error_log"; then
-  printf "%s%sPermissions added succesfully!%s
-" "${BLD}" "${CGR}" "${CNC}"
-else
-  printf "%s%sFailed to add permissions. See %s$error_log%s
-" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
-fi
+chmod +x "$HOME"/.config/ranger/scope.sh 2>>"$error_log" \
+  && printf "%s%sExecution permissions added to scope.sh%s\n" "${BLD}" "${CGR}" "${CNC}" \
+  || printf "%s%sFailed to add permissions to scope.sh. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
 
-printf "
-
-%s%sFiles copied succesfully!!%s
-" "${BLD}" "${CGR}" "${CNC}"
-sleep 5
-
-########## ---------- Cloning the zsh plugins! ---------- ##########
+########## ---------- Cloning the zsh plugins ---------- ##########
 
 logo "Download zsh plugins"
 
 plugins_dir="$HOME/.config/zsh/plugins/"
-
 mkdir -p "$plugins_dir"
 
-repo_url="https://github.com/zsh-users/zsh-autosuggestions"
+clone_plugin() {
+  local url=$1
+  local name=$2
+  if [ ! -d "$plugins_dir/$name" ]; then
+    printf "Cloning plugin from %s\n" "$url"
+    git clone "$url" "$plugins_dir/$name" || echo "Failed to clone $name"
+  else
+    echo "Plugin $name already exists, skipping."
+  fi
+}
 
-printf "Cloning plugin from %s\n" "$repo_url"
-git clone "$repo_url" "$plugins_dir/zsh-autosuggestions"
-sleep 2
+clone_plugin "https://github.com/zsh-users/zsh-autosuggestions" "zsh-autosuggestions"
+clone_plugin "https://github.com/zsh-users/zsh-syntax-highlighting" "zsh-syntax-highlighting"
+clone_plugin "https://github.com/zsh-users/zsh-history-substring-search" "zsh-history-substring-search"
 
-repo_url="https://github.com/zsh-users/zsh-syntax-highlighting"
-
-printf "Cloning plugin from %s\n" "$repo_url"
-git clone "$repo_url" "$plugins_dir/zsh-syntax-highlighting"
-sleep 2
-
-repo_url="https://github.com/zsh-users/zsh-history-substring-search"
-
-printf "Cloning plugin from %s\n" "$repo_url"
-git clone "$repo_url" "$plugins_dir/zsh-history-substring-search"
-sleep 2
-
-clear
-
-########## ---------- Download pokemon-colorscripts! ---------- ##########
+########## ---------- Download pokemon-colorscripts ---------- ##########
 
 logo "Download pokemon-colorscripts"
 
 repo_url="https://gitlab.com/phoneybadger/pokemon-colorscripts.git"
+if [ ! -d "$HOME/.config/pokemon-colorscripts" ]; then
+  git clone "$repo_url" "$HOME/.config/pokemon-colorscripts"
+  cd "$HOME/.config/pokemon-colorscripts" || exit
+  if ! sudo ./install.sh >>"$error_log" 2>&1; then
+    echo "Error installing pokemon-colorscripts. See $error_log."
+  fi
+  cd
+else
+  echo "pokemon-colorscripts already installed, skipping."
+fi
 
-git clone "$repo_url" "$HOME/.config/pokemon-colorscripts"
-sleep 2
-
-cd "$HOME/.config/pokemon-colorscripts"
-sudo ./install.sh
-
-cd
-
-clear
-
-########## --------- Changing shell to zsh ---------- ##########
+########## ---------- Changing shell to zsh ---------- ##########
 
 logo "Changing default shell to zsh"
 
-if [[ $SHELL != "/usr/bin/zsh" ]]; then
-  printf "\n%s%sChanging your shell to zsh. Your root password is needed.%s\n\n" "${BLD}" "${CYE}" "${CNC}"
-  chsh -s /usr/bin/zsh
-  printf "%s%sShell changed to zsh. Please reboot WSL.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+ZSH_PATH=$(command -v zsh)
+if [[ $SHELL != "$ZSH_PATH" ]]; then
+  printf "\n%s%sChanging your shell to zsh...%s\n\n" "${BLD}" "${CYE}" "${CNC}"
+  chsh -s "$ZSH_PATH"
+  printf "%s%sShell changed to zsh. Please restart WSL.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
 else
-  printf "%s%sYour shell is already zsh\nGood bye! installation finished, now reboot WSL%s\n" "${BLD}" "${CGR}" "${CNC}"
+  printf "%s%sYour shell is already zsh.%s\n" "${BLD}" "${CGR}" "${CNC}"
 fi
-zsh
+
+echo -e "\n${CYE}To apply changes, run in PowerShell: ${CGR}wsl --shutdown${CYE} and reopen WSL.${CNC}\n"
