@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-CRE=$(tput setaf 1)   
-CYE=$(tput setaf 3)   
-CGR=$(tput setaf 2)   
-CBL=$(tput setaf 4)   
+CRE=$(tput setaf 1)
+CYE=$(tput setaf 3)
+CGR=$(tput setaf 2)
+CBL=$(tput setaf 4)
 BLD=$(tput bold)
 CNC=$(tput sgr0)
 
@@ -14,13 +14,12 @@ date=$(date +%Y%m%d-%H%M%S)
 logo() {
   local text="${1:?}"
   local len=${#text}
-  local border=$(printf '═%.0s' $(seq 1 $((len+4))))
+  local border=$(printf '═%.0s' $(seq 1 $((len + 4))))
 
   printf "\n${CRE}╔${border}╗${CNC}\n"
   printf "${CRE}║${CNC}  ${CYE}${text}${CNC}  ${CRE}║${CNC}\n"
   printf "${CRE}╚${border}╝${CNC}\n\n"
 }
-
 
 ########## ---------- You must not run this as root ---------- ##########
 
@@ -45,9 +44,9 @@ printf '%s%sThis script will check if you have the necessary dependencies, and i
 while true; do
   read -rp " Do you wish to continue? [y/N]: " yn
   case $yn in
-    [Yy]* ) break ;;
-    [Nn]* ) exit ;;
-    * ) printf " Error: just write 'y' or 'n'\n\n" ;;
+  [Yy]*) break ;;
+  [Nn]*) exit ;;
+  *) printf " Error: just write 'y' or 'n'\n\n" ;;
   esac
 done
 clear
@@ -93,9 +92,9 @@ sleep 5
 
 for folder in nvim ranger zsh; do
   if [ -d "$HOME/.config/$folder" ]; then
-    mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>>"$error_log" \
-      && printf "%s%s%s folder backed up successfully at %s%s/%s_%s%s\n" "${BLD}" "${CGR}" "$folder" "${CBL}" "$backup_folder" "$folder" "$date" "${CNC}" \
-      || printf "%s%sFailed to backup %s folder. See %s$error_log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
+    mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>>"$error_log" &&
+      printf "%s%s%s folder backed up successfully at %s%s/%s_%s%s\n" "${BLD}" "${CGR}" "$folder" "${CBL}" "$backup_folder" "$folder" "$date" "${CNC}" ||
+      printf "%s%sFailed to backup %s folder. See %s$error_log%s\n" "${BLD}" "${CRE}" "$folder" "${CBL}" "${CNC}"
   else
     printf "%s%s%s folder does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "$folder" "${CYE}" "${CNC}"
   fi
@@ -103,14 +102,14 @@ done
 
 for file in starship.toml .zshrc; do
   if [ -f "$HOME/.config/$file" ]; then
-    mv "$HOME/.config/$file" "$backup_folder/${file}_$date" 2>>"$error_log" \
-      && printf "%s%s$file file backed up successfully at %s%s/$file_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}" \
-      || printf "%s%sFailed to backup $file file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+    mv "$HOME/.config/$file" "$backup_folder/${file}_$date" 2>>"$error_log" &&
+      printf "%s%s$file file backed up successfully at %s%s/$file_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}" ||
+      printf "%s%sFailed to backup $file file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
 
   elif [ -f "$HOME/$file" ]; then
-    mv "$HOME/$file" "$backup_folder/${file}_$date" 2>>"$error_log" \
-      && printf "%s%s$file file backed up successfully at %s%s/$file_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}" \
-      || printf "%s%sFailed to backup $file file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+    mv "$HOME/$file" "$backup_folder/${file}_$date" 2>>"$error_log" &&
+      printf "%s%s$file file backed up successfully at %s%s/$file_%s%s\n" "${BLD}" "${CGR}" "${CBL}" "$backup_folder" "${date}" "${CNC}" ||
+      printf "%s%sFailed to backup $file file. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
 
   else
     printf "%s%sThe file $file does not exist, %sno backup needed%s\n" "${BLD}" "${CGR}" "${CYE}" "${CNC}"
@@ -126,17 +125,17 @@ printf "Copying files to respective directories..\n"
 
 for dirs in ~/wsl-setup/config/*; do
   dir_name=$(basename "$dirs")
-  cp -R "${dirs}" ~/.config/ 2>>"$error_log" \
-    && printf "%s%s%s %sconfiguration installed successfully%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CGR}" "${CNC}" \
-    || printf "%s%s%s %sconfiguration failed, see %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
+  cp -R "${dirs}" ~/.config/ 2>>"$error_log" &&
+    printf "%s%s%s %sconfiguration installed successfully%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CGR}" "${CNC}" ||
+    printf "%s%s%s %sconfiguration failed, see %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "${dir_name}" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
 done
 
 cp -f "$HOME"/wsl-setup/config/starship.toml "$HOME"/.config
 cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 
-chmod +x "$HOME"/.config/ranger/scope.sh 2>>"$error_log" \
-  && printf "%s%sExecution permissions added to scope.sh%s\n" "${BLD}" "${CGR}" "${CNC}" \
-  || printf "%s%sFailed to add permissions to scope.sh. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
+chmod +x "$HOME"/.config/ranger/scope.sh 2>>"$error_log" &&
+  printf "%s%sExecution permissions added to scope.sh%s\n" "${BLD}" "${CGR}" "${CNC}" ||
+  printf "%s%sFailed to add permissions to scope.sh. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
 
 ########## ---------- Cloning the zsh plugins ---------- ##########
 
