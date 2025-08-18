@@ -1,20 +1,18 @@
 return {
   "neovim/nvim-lspconfig",
   event = { "BufReadPre", "BufNewFile" },
-  dependencies = {
-    "hrsh7th/cmp-nvim-lsp",
-  },
   config = function()
     local lspconfig = require("lspconfig")
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-    -- servers
     local servers = {
-      "ts_ls",
-      "pyright",
-      "html",
-      "cssls",
-      "jsonls",
+      "ts_ls",    -- TypeScript/JavaScript
+      "pyright",  -- Python
+      "html",     -- HTML
+      "cssls",    -- CSS
+      "jsonls",   -- JSON
+      "emmet_ls", -- Emmet
+      "tailwindcss"
     }
 
     for _, server in ipairs(servers) do
@@ -22,5 +20,32 @@ return {
         capabilities = capabilities,
       })
     end
+
+    lspconfig.lua_ls.setup({
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          diagnostics = { globals = { "vim" } },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file("", true),
+            checkThirdParty = false,
+          },
+        },
+      },
+    })
+
+    lspconfig.emmet_ls.setup({
+      capabilities = capabilities,
+      filetypes = {
+        "html",
+        "css",
+        "javascriptreact",
+        "typescriptreact",
+      },
+    })
+
+    lspconfig.tailwindcss.setup({
+      filetypes = { "html", "javascriptreact", "typescriptreact" },
+    })
   end,
 }

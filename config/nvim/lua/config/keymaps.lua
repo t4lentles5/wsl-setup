@@ -89,6 +89,11 @@ map("n", "gy", function() Snacks.picker.lsp_type_definitions() end, { desc = "Go
 map("n", "<leader>ss", function() Snacks.picker.lsp_symbols() end, { desc = "LSP Symbols" })
 map("n", "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, { desc = "LSP Workspace Symbols" })
 
+-- Format
+map({ "n", "v" }, "<leader>f", function()
+  require("conform").format({ async = true, lsp_fallback = true })
+end, { desc = "Format file" })
+
 -- Diagnostics
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",
   vim.tbl_extend("force", opts, { desc = "Diagnostics (Trouble)" }))

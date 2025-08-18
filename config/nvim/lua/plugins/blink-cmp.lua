@@ -1,7 +1,9 @@
 return {
 	"saghen/blink.cmp",
 	event = { "BufReadPre", "BufNewFile" },
-	dependencies = "rafamadriz/friendly-snippets",
+	dependencies = {
+		"rafamadriz/friendly-snippets",
+	},
 	version = "1.*",
 	opts = {
 		keymap = { preset = "enter" },
@@ -14,6 +16,8 @@ return {
 			default = { "lsp", "path", "snippets", "buffer" },
 		},
 
-		fuzzy = { implementation = "prefer_rust_with_warning" },
+		fuzzy = {
+			implementation = "prefer_rust_with_warning",
+		},
 	},
 }
