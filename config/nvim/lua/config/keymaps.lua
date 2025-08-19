@@ -69,7 +69,6 @@ end, { desc = "Grep" })
 map("n", "<leader>:", function()
 	Snacks.picker.command_history()
 end, { desc = "Command History" })
--- map("n", "<leader>e", function() Snacks.explorer() end, { desc = "File Explorer" })
 
 -- Find
 map("n", "<leader>fb", function()
