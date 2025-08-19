@@ -60,7 +60,7 @@ sudo apt update && sudo apt upgrade -y
 
 logo "Installing needed packages.."
 
-dependencies=(bat eza highlight python3-pygments ranger xclip zsh)
+dependencies=(bat eza highlight python3-pygments ranger ripgrep xclip zsh)
 
 is_installed() {
   dpkg -s "$1" &>/dev/null
