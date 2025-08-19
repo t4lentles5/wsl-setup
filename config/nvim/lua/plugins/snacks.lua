@@ -32,11 +32,11 @@ return {
 			width = 50,
 			sections = {
 				{ section = "header" },
-				{ section = "keys",   gap = 1, padding = 1 },
+				{ section = "keys", gap = 1, padding = 1 },
 				{ section = "startup" },
 				{
 					section = "terminal",
-					cmd = "pokemon-colorscripts -n articuno --no-title; sleep .0",
+					cmd = "pokemon-colorscripts -n articuno --no-title; sleep .1",
 					pane = 2,
 					indent = 0,
 					height = 25,

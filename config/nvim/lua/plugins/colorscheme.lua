@@ -1,21 +1,26 @@
 return {
-	"folke/tokyonight.nvim",
-	lazy = false,
-	priority = 1000,
-	config = function()
-		require("tokyonight").setup({
-			style = "night",
-			transparent = true,
-			terminal_colors = true,
-			styles = {
-				sidebars = "dark",
-				floats = "dark",
-				comments = { italic = true },
-				keywords = { italic = true },
-				functions = { italic = true },
-				variables = { italic = true },
-			},
-		})
-		vim.cmd.colorscheme("tokyonight-night")
+	"tiagovla/tokyodark.nvim",
+	opts = {
+		transparent_background = true,
+		gamma = 1.00,
+		styles = {
+			comments = { italic = true },
+			keywords = { italic = true },
+			identifiers = { italic = true },
+			functions = {},
+			variables = {},
+		},
+		custom_highlights = function(highlights, palette)
+			return highlights
+		end,
+		custom_palette = function(palette)
+			return palette
+		end,
+		terminal_colors = false,
+	},
+	config = function(_, opts)
+		vim.o.termguicolors = true
+		require("tokyodark").setup(opts)
+		vim.cmd([[colorscheme tokyodark]])
 	end,
 }
