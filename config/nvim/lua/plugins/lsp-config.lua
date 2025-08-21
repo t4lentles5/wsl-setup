@@ -21,6 +21,20 @@ return {
       })
     end
 
+    local root_dir = require("lspconfig").util.root_pattern("package.json")(vim.api.nvim_buf_get_name(0))
+    if root_dir then
+      lspconfig.astro.setup({
+        capabilities = capabilities,
+        init_options = {
+          typescript = {
+            tsdk = root_dir .. "/node_modules/typescript/lib",
+          },
+        },
+      })
+    else
+      lspconfig.astro.setup({ capabilities = capabilities })
+    end
+
     lspconfig.lua_ls.setup({
       capabilities = capabilities,
       settings = {
