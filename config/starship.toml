@@ -6,7 +6,7 @@ command_timeout = 5000
 add_newline = false
 
 [os]
-format = "[$symbol](bold red) "
+format = "[$symbol](bold blue) "
 disabled = false
 
 [os.symbols]
