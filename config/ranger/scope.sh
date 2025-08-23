@@ -42,85 +42,100 @@ BAT_THEME='base16'
 
 handle_extension() {
   case "${FILE_EXTENSION_LOWER}" in
-    # Archives
-    a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
-      atool --list -- "${FILE_PATH}" && exit 5
-      bsdtar --list --file "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    rar)
-      unrar lt -p- -- "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    7z)
-      7z l -p -- "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    # PDF
-    pdf)
-      pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - && exit 5
-      exiftool "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    # BitTorrent
-    torrent)
-      transmission-show -- "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    # OpenDocument
-    odt|ods|odp|sxw)
-      odt2txt "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    # HTML preview as text
-    htm|html|xhtml)
-      w3m -dump "${FILE_PATH}" && exit 5
-      lynx -dump -- "${FILE_PATH}" && exit 5
-      elinks -dump "${FILE_PATH}" && exit 5 ;;
+  # Archives
+  a | ace | alz | arc | arj | bz | bz2 | cab | cpio | deb | gz | jar | lha | lz | lzh | lzma | lzo | rpm | rz | t7z | tar | tbz | tbz2 | tgz | tlz | txz | tZ | tzo | war | xpi | xz | Z | zip)
+    atool --list -- "${FILE_PATH}" && exit 5
+    bsdtar --list --file "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  rar)
+    unrar lt -p- -- "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  7z)
+    7z l -p -- "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  # PDF
+  pdf)
+    pdftotext -l 10 -nopgbrk -q -- "${FILE_PATH}" - && exit 5
+    exiftool "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  # BitTorrent
+  torrent)
+    transmission-show -- "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  # OpenDocument
+  odt | ods | odp | sxw)
+    odt2txt "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  # HTML preview as text
+  htm | html | xhtml)
+    w3m -dump "${FILE_PATH}" && exit 5
+    lynx -dump -- "${FILE_PATH}" && exit 5
+    elinks -dump "${FILE_PATH}" && exit 5
+    ;;
   esac
 
   case "${FILE_EXTENSION_LOWER}" in
-    ts|tsx|jsx|astro|js|md|json|vue|svelte|css|scss|html)
-      batcat --color=always --theme="${BAT_THEME}" --decorations=never --tabs=4 "${FILE_PATH}" && exit 5
-      highlight --replace-tabs="${HIGHLIGHT_TABWIDTH}" --out-format="ansi" --style="${HIGHLIGHT_STYLE}" --force -- "${FILE_PATH}" && exit 5
-      pygmentize -f terminal -O style=${PYGMENTIZE_STYLE} -- "${FILE_PATH}" && exit 5
-      exit 1 ;;
+  ts | tsx | jsx | astro | js | md | json | vue | svelte | css | scss | html)
+    bat --color=always --theme="${BAT_THEME}" --decorations=never --tabs=4 "${FILE_PATH}" && exit 5
+    highlight --replace-tabs="${HIGHLIGHT_TABWIDTH}" --out-format="ansi" --style="${HIGHLIGHT_STYLE}" --force -- "${FILE_PATH}" && exit 5
+    pygmentize -f terminal -O style=${PYGMENTIZE_STYLE} -- "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
   esac
 }
 
 handle_image() {
   local mimetype="${1}"
   case "${mimetype}" in
-    image/svg+xml)
-      convert "${FILE_PATH}" "${IMAGE_CACHE_PATH}" && exit 6
-      exit 1 ;;
-    image/*)
-      local orientation
-      orientation="$(identify -format '%[EXIF:Orientation]\n' -- "${FILE_PATH}")"
-      if [[ -n "$orientation" && "$orientation" != 1 ]]; then
-        convert -- "${FILE_PATH}" -auto-orient "${IMAGE_CACHE_PATH}" && exit 6
-      fi
-      exit 7 ;;
-    video/*)
-      ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
-      exit 1 ;;
-    application/pdf)
-      pdftoppm -f 1 -l 1 -scale-to-x 1920 -scale-to-y -1 -singlefile -jpeg -tiffcompression jpeg -- "${FILE_PATH}" "${IMAGE_CACHE_PATH%.*}" && exit 6 || exit 1 ;;
+  image/svg+xml)
+    convert "${FILE_PATH}" "${IMAGE_CACHE_PATH}" && exit 6
+    exit 1
+    ;;
+  image/*)
+    local orientation
+    orientation="$(identify -format '%[EXIF:Orientation]\n' -- "${FILE_PATH}")"
+    if [[ -n "$orientation" && "$orientation" != 1 ]]; then
+      convert -- "${FILE_PATH}" -auto-orient "${IMAGE_CACHE_PATH}" && exit 6
+    fi
+    exit 7
+    ;;
+  video/*)
+    ffmpegthumbnailer -i "${FILE_PATH}" -o "${IMAGE_CACHE_PATH}" -s 0 && exit 6
+    exit 1
+    ;;
+  application/pdf)
+    pdftoppm -f 1 -l 1 -scale-to-x 1920 -scale-to-y -1 -singlefile -jpeg -tiffcompression jpeg -- "${FILE_PATH}" "${IMAGE_CACHE_PATH%.*}" && exit 6 || exit 1
+    ;;
   esac
 }
 
 handle_mime() {
   local mimetype="${1}"
   case "${mimetype}" in
-    text/*|*/xml)
-      if [[ "$(stat --printf='%s' -- "${FILE_PATH}")" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
-        exit 2
-      fi
-      batcat --color=always --theme="${BAT_THEME}" --decorations=never --tabs=4 "${FILE_PATH}" && exit 5
-      highlight --replace-tabs="${HIGHLIGHT_TABWIDTH}" --out-format="ansi" --style="${HIGHLIGHT_STYLE}" --force -- "${FILE_PATH}" && exit 5
-      pygmentize -f terminal -O style=${PYGMENTIZE_STYLE} -- "${FILE_PATH}" && exit 5
-      exit 2 ;;
-    image/*)
-      exiftool "${FILE_PATH}" && exit 5
-      exit 1 ;;
-    video/*|audio/*)
-      mediainfo "${FILE_PATH}" && exit 5
-      exiftool "${FILE_PATH}" && exit 5
-      exit 1 ;;
+  text/* | */xml)
+    if [[ "$(stat --printf='%s' -- "${FILE_PATH}")" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
+      exit 2
+    fi
+    bat --color=always --theme="${BAT_THEME}" --decorations=never --tabs=4 "${FILE_PATH}" && exit 5
+    highlight --replace-tabs="${HIGHLIGHT_TABWIDTH}" --out-format="ansi" --style="${HIGHLIGHT_STYLE}" --force -- "${FILE_PATH}" && exit 5
+    pygmentize -f terminal -O style=${PYGMENTIZE_STYLE} -- "${FILE_PATH}" && exit 5
+    exit 2
+    ;;
+  image/*)
+    exiftool "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
+  video/* | audio/*)
+    mediainfo "${FILE_PATH}" && exit 5
+    exiftool "${FILE_PATH}" && exit 5
+    exit 1
+    ;;
   esac
 }
 
