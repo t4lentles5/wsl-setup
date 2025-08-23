@@ -12,7 +12,6 @@ return {
       "cssls",    -- CSS
       "jsonls",   -- JSON
       "emmet_ls", -- Emmet
-      "tailwindcss"
     }
 
     for _, server in ipairs(servers) do
@@ -56,10 +55,6 @@ return {
         "javascriptreact",
         "typescriptreact",
       },
-    })
-
-    lspconfig.tailwindcss.setup({
-      filetypes = { "html", "javascriptreact", "typescriptreact" },
     })
   end,
 }

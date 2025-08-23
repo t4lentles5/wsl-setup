@@ -1,11 +1,15 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		opts = {
-			servers = {
-				tailwindcss = {},
-			},
-		},
+		config = function()
+			local lspconfig = require("lspconfig")
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+			lspconfig.tailwindcss.setup({
+				capabilities = capabilities,
+				filetypes = { "astro", "html", "javascriptreact", "typescriptreact" },
+			})
+		end,
 	},
 	{
 		"NvChad/nvim-colorizer.lua",
@@ -34,5 +38,29 @@ return {
 
 			return opts
 		end,
+	},
+	{
+		"MaximilianLloyd/tw-values.nvim",
+		keys = {
+			{ "<Leader>cv", "<CMD>TWValues<CR>", desc = "Tailwind CSS values" },
+		},
+		opts = {
+			-- border = EcoVim.ui.float.border or "rounded", -- Valid window border style,
+			show_unknown_classes = true, -- Shows the unknown classes popup
+		},
+	},
+
+	{
+		"laytan/tailwind-sorter.nvim",
+		cmd = {
+			"TailwindSort",
+			"TailwindSortOnSaveToggle",
+		},
+		keys = {
+			{ "<Leader>cS", "<CMD>TailwindSortOnSaveToggle<CR>", desc = "toggle Tailwind CSS classes sort on save" },
+		},
+		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-lua/plenary.nvim" },
+		build = "cd formatter && npm i && npm run build",
+		config = true,
 	},
 }
