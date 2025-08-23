@@ -54,22 +54,22 @@ clear
 ########## ---------- Update system ---------- ##########
 
 logo "Updating system..."
-sudo apt update && sudo apt upgrade -y
+sudo pacman -Syu --noconfirm
 
 ########## ---------- Install packages ---------- ##########
 
 logo "Installing needed packages.."
 
-dependencies=(bat eza highlight python3-pygments ranger ripgrep xclip zsh)
+dependencies=(bat eza highlight lazygit openssl python-pygments ranger ripgrep starship ttf-jetbrains-mono-nerd xclip zsh git)
 
 is_installed() {
-  dpkg -s "$1" &>/dev/null
+  pacman -Qi "$1" &>/dev/null
 }
 
 printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
 for package in "${dependencies[@]}"; do
   if ! is_installed "$package"; then
-    if sudo apt install "$package" -y >/dev/null 2>>"$error_log"; then
+    if sudo pacman -S --noconfirm "$package" >/dev/null 2>>"$error_log"; then
       printf "%s%s%s %shas been installed successfully.%s\n" "${BLD}" "${CYE}" "$package" "${CGR}" "${CNC}"
     else
       printf "%s%s%s %shas not been installed correctly. See %s$error_log %sfor more details.%s\n" "${BLD}" "${CYE}" "$package" "${CRE}" "${CBL}" "${CRE}" "${CNC}"
