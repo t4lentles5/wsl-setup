@@ -60,7 +60,7 @@ sudo pacman -Syu --noconfirm
 
 logo "Installing needed packages.."
 
-dependencies=(bat eza fzf highlight lazygit nvm openssl python-pygments ranger ripgrep starship ttf-jetbrains-mono-nerd xclip zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+dependencies=(bat eza fzf highlight lazygit nvm openssl python-pygments ranger ripgrep starship ttf-jetbrains-mono-nerd unzip xclip zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
 is_installed() {
   pacman -Qi "$1" &>/dev/null
