@@ -3,7 +3,7 @@ format = """
 [╰──](fg:blue)$character"""
 
 command_timeout = 5001
-add_newline = false
+add_newline = true
 
 [os]
 format = "[$symbol](bold fg:blue)"
@@ -37,4 +37,3 @@ symbol = "󰘬"
 truncation_length = 13
 truncation_symbol = ""
 format = "[](bold fg:purple)[$symbol $branch(:$remote_branch)](fg:black bg:purple)[ ](bold fg:purple)"
-
