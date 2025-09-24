@@ -60,7 +60,7 @@ sudo pacman -Syu --noconfirm
 
 logo "Installing needed packages.."
 
-dependencies=(bat eza highlight lazygit openssl python-pygments ranger ripgrep starship ttf-jetbrains-mono-nerd xclip zsh git)
+dependencies=(bat eza fzf highlight lazygit nvm openssl python-pygments ranger ripgrep starship ttf-jetbrains-mono-nerd unzip xclip zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
 is_installed() {
   pacman -Qi "$1" &>/dev/null
@@ -78,6 +78,9 @@ for package in "${dependencies[@]}"; do
     printf '%s%s%s %sis already installed on your system!%s\n' "${BLD}" "${CYE}" "$package" "${CGR}" "${CNC}"
   fi
 done
+
+yay -S --noconfirm fzf-tab-git
+
 sleep 3
 clear
 
@@ -136,28 +139,6 @@ cp -f "$HOME"/wsl-setup/home/.zshrc "$HOME"
 chmod +x "$HOME"/.config/ranger/scope.sh 2>>"$error_log" &&
   printf "%s%sExecution permissions added to scope.sh%s\n" "${BLD}" "${CGR}" "${CNC}" ||
   printf "%s%sFailed to add permissions to scope.sh. See %s$error_log%s\n" "${BLD}" "${CRE}" "${CBL}" "${CNC}"
-
-########## ---------- Cloning the zsh plugins ---------- ##########
-
-logo "Download zsh plugins"
-
-plugins_dir="$HOME/.config/zsh/plugins/"
-mkdir -p "$plugins_dir"
-
-clone_plugin() {
-  local url=$1
-  local name=$2
-  if [ ! -d "$plugins_dir/$name" ]; then
-    printf "Cloning plugin from %s\n" "$url"
-    git clone "$url" "$plugins_dir/$name" || echo "Failed to clone $name"
-  else
-    echo "Plugin $name already exists, skipping."
-  fi
-}
-
-clone_plugin "https://github.com/zsh-users/zsh-autosuggestions" "zsh-autosuggestions"
-clone_plugin "https://github.com/zsh-users/zsh-syntax-highlighting" "zsh-syntax-highlighting"
-clone_plugin "https://github.com/zsh-users/zsh-history-substring-search" "zsh-history-substring-search"
 
 ########## ---------- Download pokemon-colorscripts ---------- ##########
 
