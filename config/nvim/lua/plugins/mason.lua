@@ -15,6 +15,7 @@ return {
 				"cssls",
 				"tailwindcss",
 				"lua_ls",
+				-- "astro-ls",
 			},
 			automatic_installation = true,
 		})

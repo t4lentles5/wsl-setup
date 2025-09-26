@@ -129,3 +129,8 @@ map(
 	"<cmd>Trouble qflist toggle<cr>",
 	vim.tbl_extend("force", opts, { desc = "Quickfix List (Trouble)" })
 )
+
+map("n", "<A-Down>", ":m .+1<CR>==", { noremap = true, silent = true })
+map("n", "<A-Up>", ":m .-2<CR>==", { noremap = true, silent = true })
+map("v", "<A-Down>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+map("v", "<A-Up>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
