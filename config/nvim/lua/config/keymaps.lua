@@ -1,136 +1,27 @@
-local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
+-- Keymaps are automatically loaded on the VeryLazy event
+-- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Add any additional keymaps here
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+-- vim.g.mapleader = " "
+-- vim.g.maplocalleader = " "
+
+vim.keymap.set("n", "<A-Down>", ":m .+1<CR>==", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-Up>", ":m .-2<CR>==", { noremap = true, silent = true })
+vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
 
 -- Save current file
-map("n", "<leader>w", ":w<cr>", { desc = "Save file", remap = true })
+vim.keymap.set("n", "<leader>w", ":w<cr>", { desc = "Save file", remap = true })
 
 -- ESC pressing jk
-map("i", "jk", "<ESC>", { desc = "jk to esc", noremap = true })
+vim.keymap.set("i", "jk", "<ESC>", { desc = "jk to esc", noremap = true })
 
 -- Quit Neovim
-map("n", "<leader>q", ":q<cr>", { desc = "Quit Neovim", remap = true })
+vim.keymap.set("n", "<leader>q", ":q<cr>", { desc = "Quit Neovim", remap = true })
 
 -- Increment/decrement
-map("n", "+", "<C-a>", { desc = "Increment numbers", noremap = true })
-map("n", "-", "<C-x>", { desc = "Decrement numbers", noremap = true })
+vim.keymap.set("n", "+", "<C-a>", { desc = "Increment numbers", noremap = true })
+vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement numbers", noremap = true })
 
 -- Select all
-map("n", "<C-a>", "gg<S-v>G", { desc = "Select all", noremap = true })
-
--- Indenting
-map("v", "<", "<gv", { desc = "Indenting", silent = true, noremap = true })
-map("v", ">", ">gv", { desc = "Indenting", silent = true, noremap = true })
-
--- New tab
-map("n", "te", ":tabedit")
-
--- Split window
-map("n", "<leader>sh", ":split<Return><C-w>w", { desc = "splits horizontal", noremap = true })
-map("n", "<leader>sv", ":vsplit<Return><C-w>w", { desc = "Split vertical", noremap = true })
-
--- Navigate vim panes better
-map("n", "<C-k>", "<C-w>k", { desc = "Navigate up" })
-map("n", "<C-j>", "<C-w>j", { desc = "Navigate down" })
-map("n", "<C-h>", "<C-w>h", { desc = "Navigate left" })
-map("n", "<C-l>", "<C-w>l", { desc = "Navigate right" })
-
--- Resize window
-map("n", "<C-Up>", ":resize -3<CR>")
-map("n", "<C-Down>", ":resize +3<CR>")
-map("n", "<C-Left>", ":vertical resize -3<CR>")
-map("n", "<C-Right>", ":vertical resize +3<CR>")
-
--- Bufferline
-map("n", "<Tab>", ":BufferLineCycleNext<CR>")
-map("n", "<S-Tab>", ":BufferLineCyclePrev<CR>")
-
--- Close buffer
-map("n", "<leader>c", function()
-	require("mini.bufremove").delete(0, false)
-end, { desc = "Close Buffer (safe)" })
-
--- Explorer
-map("n", "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle Explorer" })
-
--- Snacks keymaps
--- Git
-map("n", "<leader>gb", function()
-	Snacks.picker.git_branches()
-end, { desc = "Git Branches" })
-map("n", "<leader>gl", function()
-	Snacks.picker.git_log()
-end, { desc = "Git Log" })
-map("n", "<leader>gL", function()
-	Snacks.picker.git_log_line()
-end, { desc = "Git Log Line" })
-map("n", "<leader>gs", function()
-	Snacks.picker.git_status()
-end, { desc = "Git Status" })
-map("n", "<leader>gS", function()
-	Snacks.picker.git_stash()
-end, { desc = "Git Stash" })
-map("n", "<leader>gd", function()
-	Snacks.picker.git_diff()
-end, { desc = "Git Diff (Hunks)" })
-
--- LSP
-map("n", "gd", function()
-	Snacks.picker.lsp_definitions()
-end, { desc = "Goto Definition" })
-map("n", "gD", function()
-	Snacks.picker.lsp_declarations()
-end, { desc = "Goto Declaration" })
-map("n", "gr", function()
-	Snacks.picker.lsp_references()
-end, { nowait = true, desc = "References" })
-map("n", "gI", function()
-	Snacks.picker.lsp_implementations()
-end, { desc = "Goto Implementation" })
-map("n", "gy", function()
-	Snacks.picker.lsp_type_definitions()
-end, { desc = "Goto Type Definition" })
-map("n", "<leader>ss", function()
-	Snacks.picker.lsp_symbols()
-end, { desc = "LSP Symbols" })
-map("n", "<leader>sS", function()
-	Snacks.picker.lsp_workspace_symbols()
-end, { desc = "LSP Workspace Symbols" })
-
--- Format
-map({ "n", "v" }, "<leader>f", function()
-	require("conform").format({ async = true, lsp_fallback = true })
-end, { desc = "Format file" })
-
--- Diagnostics
-map(
-	"n",
-	"<leader>xx",
-	"<cmd>Trouble diagnostics toggle<cr>",
-	vim.tbl_extend("force", opts, { desc = "Diagnostics (Trouble)" })
-)
-map(
-	"n",
-	"<leader>xw",
-	"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-	vim.tbl_extend("force", opts, { desc = "Buffer Diagnostics (Trouble)" })
-)
-map(
-	"n",
-	"<leader>xl",
-	"<cmd>Trouble loclist toggle<cr>",
-	vim.tbl_extend("force", opts, { desc = "Location List (Trouble)" })
-)
-map(
-	"n",
-	"<leader>xq",
-	"<cmd>Trouble qflist toggle<cr>",
-	vim.tbl_extend("force", opts, { desc = "Quickfix List (Trouble)" })
-)
-
-map("n", "<A-Down>", ":m .+1<CR>==", { noremap = true, silent = true })
-map("n", "<A-Up>", ":m .-2<CR>==", { noremap = true, silent = true })
-map("v", "<A-Down>", ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
-map("v", "<A-Up>", ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-a>", "gg<S-v>G", { desc = "Select all", noremap = true })
